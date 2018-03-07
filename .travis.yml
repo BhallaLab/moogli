@@ -1,9 +1,12 @@
 language: cpp
+compiler:
+    - gcc
+
 notifications:
     email:
         recipients:
             - dilawar.s.rajput@gmail.com
-            - bhalla@ncbs.res.in
+            - upi.bhalla@gmail.com
 
         on_success: change
         on_failure: always
