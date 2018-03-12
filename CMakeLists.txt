@@ -9,7 +9,9 @@ set(CMAKE_POLICY CMP0017 ON)
 
 # Create a TOP-LEVEL target to dependencies can be set up properly.
 set(MOOGLI_MAIN_OUTFILE ${MOOGLI_SRC_DIR}/core/_moogli.so)
-add_custom_target(build_moogli ALL DEPENDS ${MOOGLI_MAIN_OUTFILE})
+add_custom_target(build_moogli ALL 
+    DEPENDS ${MOOGLI_MAIN_OUTFILE}
+    )
 
 # VERSION.
 set(MOOGLI_VERSION 0.5.0)
@@ -18,7 +20,7 @@ file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/VERSION "${MOOGLI_VERSION}")
 set(MOOGLI_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/moogli)
 # Check if OpenSceneGraph available.
 find_package(OpenSceneGraph)
-if((NOT OPENSCENEGRAPH_FOUND) OR (NOT OPENSCENEGRAPH_VERSION}))
+if(NOT (OPENSCENEGRAPH_FOUND AND OPENSCENEGRAPH_VERSION))
     message(STATUS "Could not find OSG. I will build private OSG.")
     set(OSG_LOCAL ON)
     set(BUILD_STATIC ON)
@@ -73,23 +75,28 @@ add_custom_command( OUTPUT ${MOOGLI_MAIN_OUTFILE}
         ${CMAKE_COMMAND} -DBUILD_STATIC=${BUILD_STATIC} 
             -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
             ${MOOGLI_SRC_DIR}
-<<<<<<< HEAD
     COMMAND $(MAKE) 
-=======
-    COMMAND $(MAKE) VERBOSE=1
->>>>>>> chamcham
     WORKING_DIRECTORY ${MOOGLI_BUILD_DIR}
+    COMMENT "Building ${MOOGLI_MAIN_OUTFILE}"
     VERBATIM
     )
 
 # BDIST, install depends on it.
-add_custom_target( bdist )
-add_custom_command( TARGET bdist 
+set(MOOGLI_BDIST_FILE ${MOOGLI_BDIST_DIR}/moogli-${MOOGLI_VERSION}*.CMAKE.tar.gz)
+add_custom_target(bdist DEPENDS ${MOOGLI_BDIST_FILE})
+add_custom_command( OUTPUT ${MOOGLI_BDIST_FILE}
+    DEPENDS ${MOOGLI_MAIN_OUTFILE}
     COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && ${PYTHON_EXECUTABLE} setup.py 
-        bdist -d ${MOOGLI_BDIST_DIR}
+        bdist -d ${MOOGLI_BDIST_DIR} -p CMAKE
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Building bdist"
+    VERBATIM
+    )
+add_custom_command( TARGET bdist POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E chdir ${MOOGLI_BDIST_INSTALL_DIR} 
         tar xvf ${MOOGLI_BDIST_DIR}/moogli-${MOOGLI_VERSION}*.tar.gz
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Extracting tar.gz to install directory"
+    # NOT VERBATIM ELSE glob won't work
     )
 add_dependencies( build_moogli bdist )
 
