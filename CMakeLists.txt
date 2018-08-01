@@ -18,8 +18,9 @@ set(MOOGLI_VERSION 0.5.0)
 file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/VERSION "${MOOGLI_VERSION}")
 
 set(MOOGLI_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/moogli)
+
 # Check if OpenSceneGraph available.
-find_package(OpenSceneGraph)
+find_package(OpenSceneGraph 3.0.2)
 if(NOT (OPENSCENEGRAPH_FOUND AND OPENSCENEGRAPH_VERSION))
     message(STATUS "Could not find OSG. I will build private OSG.")
     set(OSG_LOCAL ON)
@@ -38,7 +39,6 @@ IF(OSG_LOCAL)
 ENDIF(OSG_LOCAL)
 
 FIND_PACKAGE(PythonInterp REQUIRED)
-
 
 # On debian or ubuntu, --install-layout=deb needs to be passed.
 if(UNIX AND NOT APPLE)
@@ -74,6 +74,7 @@ add_custom_command( OUTPUT ${MOOGLI_MAIN_OUTFILE}
     COMMAND OSGDIR=${OSG_INSTALL_DIR}
         ${CMAKE_COMMAND} -DBUILD_STATIC=${BUILD_STATIC} 
             -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
+            -DOSGDIR=${OSG_INSTALL_DIR}
             ${MOOGLI_SRC_DIR}
     COMMAND $(MAKE) 
     WORKING_DIRECTORY ${MOOGLI_BUILD_DIR}
@@ -83,7 +84,7 @@ add_custom_command( OUTPUT ${MOOGLI_MAIN_OUTFILE}
 
 # BDIST, install depends on it.
 set(MOOGLI_BDIST_FILE ${MOOGLI_BDIST_DIR}/moogli-${MOOGLI_VERSION}*.CMAKE.tar.gz)
-add_custom_target(bdist DEPENDS ${MOOGLI_BDIST_FILE})
+add_custom_target(bdist ALL DEPENDS ${MOOGLI_BDIST_FILE})
 add_custom_command( OUTPUT ${MOOGLI_BDIST_FILE}
     DEPENDS ${MOOGLI_MAIN_OUTFILE}
     COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && ${PYTHON_EXECUTABLE} setup.py 
@@ -98,7 +99,7 @@ add_custom_command( TARGET bdist POST_BUILD
     COMMENT "Extracting tar.gz to install directory"
     # NOT VERBATIM ELSE glob won't work
     )
-add_dependencies( build_moogli bdist )
+add_dependencies( bdist build_moogli )
 
 # Install the unarchived bdist
 install(DIRECTORY  ${MOOGLI_BDIST_INSTALL_DIR}/usr/ 
