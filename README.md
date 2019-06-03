@@ -4,8 +4,7 @@ Install MOOGLI from PyPI:
 
 pip install moogli
 
-MOOGLI can be built and installed from sources (in current directory)
-using python distutils:
+MOOGLI can be built and installed from sources (in current directory) using python distutils:
 
 sudo python setup.py install
 
@@ -64,3 +63,7 @@ https://cygwin.com/ml/cygwin-apps/2009-06/msg00134.html
 **Solution**
 
  Install libopenscenegraph-dev
+
+# Arch Linux
+
+Install `openscanegraph` and `osgqt`.

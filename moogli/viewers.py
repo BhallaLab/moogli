@@ -1,6 +1,5 @@
-import PyQt4
-from PyQt4 import QtGui
-from PyQt4.QtCore import Qt
+from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QTimer
 import math
 import moogli.core._moogli
 
@@ -58,7 +57,7 @@ class View(moogli.core._moogli.MeshView):
         self.viewer().update()
         if self._done: return
         if self._pause: return
-        PyQt4.QtCore.QTimer.singleShot(self.idletime, self.run)
+        QTimer.singleShot(self.idletime, self.run)
 
     def attach_color_bar(self, color_bar):
         if color_bar in self._color_bars: return
@@ -238,13 +237,3 @@ class Viewer(moogli.core._moogli.Viewer):
     def get_view_with_focus(self):
         view_id = super(Viewer, self).get_view_with_focus()
         return self._views[view_id]
-
-    # @QtCore.pyqtSlot(str)
-    # def printme(self, name):
-    #     # cursor = QtGui.QCursor().pos()
-    #     menu = QtGui.QMenu()
-    #     menu.addAction("a")
-    #     menu.addAction("b")
-    #     menu.addAction("c")
-    #     menu.exec_(QtGui.QCursor().pos())
-    #     print("Selected = > ", name)

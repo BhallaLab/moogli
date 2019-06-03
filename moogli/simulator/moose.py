@@ -7,36 +7,9 @@ import moose
 import moogli
 from moogli.utils import *
 import operator
-import PyQt4
+from PyQt5.QtWidgets import QApplication
 import math
 import time
-# def _handle_spinemesh(network, spinemesh, moose = moose):
-#     group = moogli.Group(spinemesh.path)
-
-#     moose_neuron        = moose.element(spinemesh.cell)
-#     moogli_neuron       = network.get_neuron(moose_neuron.path)
-#     compartment_paths   = mesh.elecComptList
-#     voxel_start_indices = neuromesh.startVoxelInCompt
-#     voxel_end_indices   = neuromesh.endVoxelInCompt
-#     voxel_counts        = map( operator.sub
-#                              , voxel_end_indices
-#                              , voxel_start_indices
-#                              )
-#     voxel_id_template   = "{electrical_compartment_id}/{voxel_index}"
-#     for (compartment_path, voxel_start_index, voxel_end_index) in
-#         zip(compartment_paths, voxel_start_indices, voxel_end_indices):
-#         moogli_compartment = neuron.get_compartment(compartment_path)
-#         moogli_neuron.create_chemical_compartments( moogli_compartment
-#                                                   , voxel_count
-#                                                   , map( lambda voxel_index: voxel_id_template.format( voxel_index = voxel_index
-#                                                                                                       ,
-#                                                                                                       )
-#                                                         , range( voxel_start_index
-#                                                                , voxel_end_index
-#                                                                )
-#                                                         )
-#                                                   , repeat()
-#                                                   )
 
 def colorstyle(visualizable):
     return (1.0, 0.0, 1.0, 1.0)
@@ -524,7 +497,7 @@ def create_viewer( moose_network
     return viewer
 
 def view(path="", callbacks = [(id, id, id)]):
-    application = PyQt4.QtGui.QApplication([])
+    application = QApplication([])
     viewers = []
     for (prelude, interlude, postlude) in callbacks:
         network = read_network(path = path, track_parent = False)

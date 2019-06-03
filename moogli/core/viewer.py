@@ -1,6 +1,4 @@
-import PyQt4
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt
+from PyQt5.QtCore import Qt
 import math
 import _moogli
 

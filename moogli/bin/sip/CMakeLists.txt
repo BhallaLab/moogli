@@ -18,7 +18,7 @@ SET(GENERATED_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/sip_moogliViewer.cpp
     )
 
-SET(SIP_INCLUDES ${PYQT4_SIP_DIR})
+SET(SIP_INCLUDES ${PYQT5_SIP_DIR})
 
 MESSAGE("++ Using SIP includes: ${SIP_INCLUDES}")
 add_custom_command(OUTPUT ${GENERATED_SRCS}

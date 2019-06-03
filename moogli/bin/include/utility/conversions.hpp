@@ -1,7 +1,7 @@
 #ifndef __CONVERSIONS_HPP__
 #define __CONVERSIONS_HPP__
 
-#include "Python.h"
+#include "PythonWrapper.h"
 #include "osg/Vec3f"
 #include "osg/Vec4f"
 #include "osg/Vec3d"

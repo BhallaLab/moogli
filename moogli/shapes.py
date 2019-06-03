@@ -1,5 +1,5 @@
-from core import _moogli
 import moogli
+from moogli.core import _moogli
 import collections
 
 class Frustum(_moogli.Frustum):

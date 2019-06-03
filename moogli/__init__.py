@@ -1,16 +1,14 @@
-import core
-import utilities
-import shapes
-import geometry
-import colors
+import moogli.core
+import moogli.utilities
+import moogli.shapes
+import moogli.geometry
+import moogli.colors
 from .group import Group
 from .viewers import View
 from .viewers import Viewer
-import widgets
-# import constants
-# import visualization
-import extensions
-from main import *
+import moogli.widgets
+import moogli.extensions
+from moogli.main import *
 
 __all__ = ["core",
            "utilities",

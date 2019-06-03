@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
 
-## Options
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules")
 option(BUILD_STATIC "Link osg statically. Useful for creating standalone packages" OFF)
 
 add_definitions(-std=c++11)
@@ -11,18 +10,19 @@ if(APPLE)
 endif(APPLE)
 add_definitions(-fPIC)
 
-FIND_PACKAGE(PythonDev REQUIRED)
-INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
+find_package(PythonDev REQUIRED)
+find_package(SIP REQUIRED)
+include_directories(${PYTHON_INCLUDE_DIRS})
 
-FIND_PACKAGE(PyQt4 REQUIRED)
-MESSAGE("++ Found SIP flags: ${PYQT4_SIP_FLAGS}")
-SEPARATE_ARGUMENTS(PYQT4_SIP_FLAGS) # convert space separated values to a list
+find_package(PyQt5 REQUIRED)
+message("++ Found SIP flags: ${PYQT5_SIP_FLAGS}")
+separate_arguments(PYQT5_SIP_FLAGS) # convert space separated values to a list
 
 SET(SIP_CONCAT_PARTS 4)
-SET(SIP_EXTRA_OPTIONS ${PYQT4_SIP_FLAGS})
+SET(SIP_EXTRA_OPTIONS ${PYQT5_SIP_FLAGS})
 
-IF("${PYQT4_SIP_FLAGS}" STREQUAL "")
-    MESSAGE(FATAL_ERROR "++ No PYQT4_SIP_FLAGS found. Can't continue")
+IF("${PYQT5_SIP_FLAGS}" STREQUAL "")
+    MESSAGE(FATAL_ERROR "++ No PYQT5_SIP_FLAGS found. Can't continue")
 ENDIF()
 MESSAGE("++ Using sip flags: ${SIP_EXTRA_OPTIONS}")
 
@@ -31,14 +31,20 @@ IF (NOT BINDINGS_GLOBAL_INSTALL)
     SET(PYTHON_SITE_PACKAGES_DIR ${QGIS_DATA_DIR}/python)
 ENDIF (NOT BINDINGS_GLOBAL_INSTALL)
 IF (WITH_CUSTOM_WIDGETS)
-    SET(PYUIC_WIDGET_PLUGIN_DIRECTORY ${PYQT4_MOD_DIR}/uic/widget-plugins/)
+    SET(PYUIC_WIDGET_PLUGIN_DIRECTORY ${PYQT5_MOD_DIR}/uic/widget-plugins/)
 ENDIF (WITH_CUSTOM_WIDGETS)
 
-FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
-FIND_PACKAGE(OpenSceneGraph 3.0.2 REQUIRED 
-    osgFX osgGA
-    osgAnimation osgViewer
-    osgManipulator osgSim osgText
+find_package(Qt5Widgets CONFIG REQUIRED)
+find_package(Qt5OpenGL)
+
+find_package(OpenSceneGraph 3.0.2 REQUIRED 
+    osgFX 
+    osgGA
+    osgAnimation 
+    osgViewer
+    osgManipulator
+    osgSim 
+    osgText
     osgDB
     osgUtil
     OpenThreads
@@ -46,7 +52,9 @@ FIND_PACKAGE(OpenSceneGraph 3.0.2 REQUIRED
 
 MESSAGE(STATUS "OSG LIBRARIES: ${OPENSCENEGRAPH_LIBRARIES}")
 
-INCLUDE(${QT_USE_FILE})
+if(QT_USE_FILE)
+    include(${QT_USE_FILE})
+endif()
 
 FIND_PROGRAM(SIP_EXECUTABLE sip)
 MESSAGE("++ SIP ${SIP_EXECUTABLE}")
@@ -57,30 +65,51 @@ include_directories(${SIP_INCLUDES} ${PYTHON_INCLUDE_DIRS})
 include_directories(${OPENSCENEGRAPH_INCLUDE_DIRS})
 include_directories(${OSGANIMATION_INCLUDE_DIR})
 
+#qt5 paths.
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Core_INCLUDE_DIRS})
+include_directories(${Qt5OpenGL_INCLUDE_DIRS})
+
 add_subdirectory(${PROJECT_SOURCE_DIR}/bin/sip)
 add_subdirectory(${PROJECT_SOURCE_DIR}/bin/src)
 
-ADD_LIBRARY(_moogli SHARED 
-    ${PROJECT_SOURCE_DIR}/bin/moc/Viewer.moc.cpp
-    )
+# NOTE: moc should be run to genrate these files.
+set(MOC_HEADERS ${PROJECT_SOURCE_DIR}/bin/include/view/Viewer.hpp)
+set(MOC_SOURCES "")
+foreach(_MOC_HEADER ${MOC_HEADERS})
+    get_filename_component(_TGT_NAME ${MOC_HEADERS} NAME_WE)
+    set(_MOC_SOURCE ${_TGT_NAME}.moc.cpp)
+    message(STATUS "Adding target: ${_MOC_HEADER} ->  ${_MOC_SOURCE} using MOC")
+    add_custom_command(OUTPUT ${_MOC_SOURCE}
+        COMMAND moc ${_MOC_HEADER} -o ${_MOC_SOURCE}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Generating ${_MOC_SOURCE} from ${_MOC_HEADER}"
+        )
+    add_custom_target(${_TGT_NAME} ALL DEPENDS ${_MOC_SOURCE})
+    list(APPEND MOC_SOURCES ${_MOC_SOURCE})
+endforeach()
+set_source_files_properties(${MOC_SOURCES} GENERATED)
 
-IF(APPLE)
+add_library(_moogli SHARED ${MOC_SOURCES})
+
+
+if(APPLE)
     SET_TARGET_PROPERTIES(_moogli 
         PROPERTIES OUTPUT_NAME "_moogli.so"  
         LINK_FLAGS "-undefined dynamic_lookup"
         SUFFIX ""
         )
-ELSE(APPLE)
+else(APPLE)
     SET_TARGET_PROPERTIES(_moogli PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/core"
         PREFIX ""
         )
-ENDIF(APPLE)
+endif(APPLE)
 
 ## Link the following libraries to moogli.
 SET(STATIC_LIBRARIES sip src)
 
-SET(DYNAMIC_LIBRARIES Qt4::QtCore Qt4::QtGui Qt4::QtOpenGL)
+SET(DYNAMIC_LIBRARIES Qt5::Core Qt5::OpenGL)
 
 IF(BUILD_STATIC)
     LIST(APPEND STATIC_LIBRARIES ${OPENSCENEGRAPH_LIBRARIES})
@@ -97,4 +126,5 @@ ELSE(APPLE)
         "-Wl,--no-whole-archive"
         )
 ENDIF(APPLE)
-TARGET_LINK_LIBRARIES(_moogli ${DYNAMIC_LIBRARIES})
+
+target_link_libraries(_moogli ${DYNAMIC_LIBRARIES})

@@ -242,7 +242,7 @@ public:
     PyObject *
     id() const;
     %MethodCode
-        sipRes = PyString_FromString(sipCpp -> id().c_str());
+        sipRes = PyBytes_FromString(sipCpp -> id().c_str());
     %End
 
     // Mesh *
@@ -683,7 +683,7 @@ public:
     PyObject *
     get_title () const;
     %MethodCode
-        sipRes = PyString_FromString(sipCpp -> get_title().c_str());
+        sipRes = PyBytes_FromString(sipCpp -> get_title().c_str());
     %End
 
     void
@@ -710,7 +710,7 @@ public:
     PyObject *
     get_text_font() const;
     %MethodCode
-        sipRes = PyString_FromString(sipCpp -> get_text_font().c_str());
+        sipRes = PyBytes_FromString(sipCpp -> get_text_font().c_str());
     %End
 
     void
@@ -827,7 +827,7 @@ public:
     PyObject *
     get_view_with_focus();
     %MethodCode
-        sipRes = PyString_FromString(sipCpp -> get_view_with_focus() -> getName().c_str());
+        sipRes = PyBytes_FromString(sipCpp -> get_view_with_focus() -> getName().c_str());
     %End
 
     void

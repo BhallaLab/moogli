@@ -1,11 +1,11 @@
-import swc
-import csv
-import tsv
-import dat
-import txt
-import nsdf
-import nml
-import table
+import moogli.parser.swc
+import moogli.parser.csv
+import moogli.parser.tsv
+import moogli.parser.dat
+import moogli.parser.txt
+import moogli.parser.nsdf
+import moogli.parser.nml
+import moogli.parser.table
 
 __all__ = [ "swc"
           , "csv"

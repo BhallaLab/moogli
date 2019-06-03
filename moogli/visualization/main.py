@@ -1,7 +1,8 @@
 from .pipeline import SimulationDataConsumer
 from moogli.core import NetworkViewer
-from PyQt4.QtGui import QWidget, QGridLayout
-from PyQt4.QtCore import QTimer
+
+from PyQt5.QtWidgets import QWidget, QGridLayout
+from PyQt5.QtCore import QTimer
 
 
 class NetworkVisualizer(SimulationDataConsumer, NetworkViewer):
@@ -14,7 +15,6 @@ class NetworkVisualizer(SimulationDataConsumer, NetworkViewer):
         for mediator in self.mediators:
             for (visualizable, value) in mediator.output.items():
                 self.network.visualizables[visualizable].set_color(value)
-                # print self.network.visualizables[visualizable]
         self.update()
 
     def reinit(self):
@@ -52,7 +52,6 @@ class NetworkVisualizationEnvironment(QWidget):
 
     def run(self):
         self.advance()
-        print self.clock.now()
 #        self.interlude(self)
 #        self.update()
 #        if self._done:

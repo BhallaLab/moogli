@@ -14,7 +14,7 @@
 """
 https://en.wikipedia.org/wiki/Comma-separated_values
 """
-import .table
+import moogli.parser.table
 
 LINE_SEPARATOR_REGEX        = r"[\n\r]*" # Windows or Unix style newline character
 COLUMN_SEPARATOR_REGEX      = r","  # Any number of spaces followed by comma followed by any number of spaces

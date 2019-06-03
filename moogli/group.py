@@ -91,7 +91,7 @@ class Group():
             try:
                 setter = getattr(shape, "set_" + property)
                 setter(mapper(value))
-            except AttributeError, e:
+            except AttributeError as e:
                 if permissive:
                     continue
                 else:
@@ -110,7 +110,7 @@ class Group():
             try:
                 getter = getattr(shape, "get_" + property)
                 values.append(mapper(getter()))
-            except AttributeError, e:
+            except AttributeError as e:
                 if permissive:
                     values.append(None)
                 else:

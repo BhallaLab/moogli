@@ -1,19 +1,17 @@
 from moogli import constants
 from moogli.visualization.pipeline import SimulationDataConsumer
-from PyQt4.QtGui import QWidget
-from PyQt4.QtGui import QMenu
-from PyQt4.QtGui import QAction
-from PyQt4.QtGui import QGridLayout
-from PyQt4.QtCore import pyqtSlot
-from PyQt4 import QtCore
+from PyQt5.QtWidgets import QWidget, QMenu, QAction, QGridLayout
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtCore import SLOT, SIGNAL
+
 from matplotlib.lines import Line2D
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from matplotlib.figure import Figure
+
 import numpy
 import csv
 import time
-from PyQt4.QtCore import SLOT, SIGNAL
 
 
 class LinePlotter(SimulationDataConsumer, QWidget):

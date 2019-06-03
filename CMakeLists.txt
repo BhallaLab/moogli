@@ -7,14 +7,14 @@ project(MOOGLI)
 
 set(CMAKE_POLICY CMP0017 ON)
 
+
 # Create a TOP-LEVEL target to dependencies can be set up properly.
 set(MOOGLI_MAIN_OUTFILE ${MOOGLI_SRC_DIR}/core/_moogli.so)
 add_custom_target(build_moogli ALL 
-    DEPENDS ${MOOGLI_MAIN_OUTFILE}
-    )
+    DEPENDS ${MOOGLI_MAIN_OUTFILE})
 
 # VERSION.
-set(MOOGLI_VERSION 0.5.0)
+set(MOOGLI_VERSION 0.6.0)
 file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/VERSION "${MOOGLI_VERSION}")
 
 set(MOOGLI_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/moogli)
@@ -83,7 +83,7 @@ add_custom_command( OUTPUT ${MOOGLI_MAIN_OUTFILE}
     )
 
 # BDIST, install depends on it.
-set(MOOGLI_BDIST_FILE ${MOOGLI_BDIST_DIR}/moogli-${MOOGLI_VERSION}*.CMAKE.tar.gz)
+set(MOOGLI_BDIST_FILE ${MOOGLI_BDIST_DIR}/moogli-${MOOGLI_VERSION}.CMAKE.tar.gz)
 add_custom_target(bdist ALL DEPENDS ${MOOGLI_BDIST_FILE})
 add_custom_command( OUTPUT ${MOOGLI_BDIST_FILE}
     DEPENDS ${MOOGLI_MAIN_OUTFILE}
@@ -94,9 +94,11 @@ add_custom_command( OUTPUT ${MOOGLI_BDIST_FILE}
     VERBATIM
     )
 add_custom_command( TARGET bdist POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E chdir ${MOOGLI_BDIST_INSTALL_DIR} 
-        tar xvf ${MOOGLI_BDIST_DIR}/moogli-${MOOGLI_VERSION}*.tar.gz
-    COMMENT "Extracting tar.gz to install directory"
+    COMMAND tar xvf ${MOOGLI_BDIST_DIR}/moogli-${MOOGLI_VERSION}.CMAKE.tar.gz
+        -C ${MOOGLI_BDIST_INSTALL_DIR}
+    COMMENT "Extracting tar.gz to  ${MOOGLI_BDIST_INSTALL_DIR}"
+    WORKING_DIRECTORY ${MOOGLI_BDIST_INSTALL_DIR}
+    VERBATIM
     # NOT VERBATIM ELSE glob won't work
     )
 add_dependencies( bdist build_moogli )
@@ -104,4 +106,12 @@ add_dependencies( bdist build_moogli )
 # Install the unarchived bdist
 install(DIRECTORY  ${MOOGLI_BDIST_INSTALL_DIR}/usr/ 
     DESTINATION ${CMAKE_INSTALL_PREFIX}
+    )
+
+# enable_testing
+enable_testing()
+add_test(NAME test_sanity COMMAND ${PYTHON_EXECUTABLE} -c "import moogli")
+
+set_property(TEST test_sanity 
+    PROPERTY ENVIRONMENT PYTHONPATH=${CMAKE_CURRENT_SOURCE_DIR}/moogli
     )
