@@ -48,13 +48,12 @@ and some patches from prior attempts here:
 
 https://cygwin.com/ml/cygwin-apps/2009-06/msg00134.html
 
-**Error**
+## Error
 
   sip: Unable to find file "QtGui/QtGuimod.sip"
 
-**Solution**
+**Solution** pyqt5-dev or python-qt4-dev .
 
-  Install python-qt4-dev
 
 **Error**
 
