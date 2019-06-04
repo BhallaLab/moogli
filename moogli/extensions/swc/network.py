@@ -20,7 +20,6 @@ class SwcNetwork(Network):
         swc_data = numpy.genfromtxt(filename, dtype=dtype)
         neuron = Neuron(neuron_name)
         self.visualizables[neuron_name] = neuron
-        print swc_data
         for (cid, ctype, cx, cy, cz, cr, cpid) in swc_data:
             # if cid > 200 : break
             cid = str(cid)

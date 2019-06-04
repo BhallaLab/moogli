@@ -252,7 +252,7 @@ class LinePlotter(SimulationDataConsumer, QWidget):
         for line in self.axes.lines:
             for mediator in self.mediators:
                 try:
-                    print "gid", line.get_gid()
+                    print( "gid", line.get_gid() )
                     yvalue = mediator.output[line.get_gid()]
                     ydata = numpy.append(line.get_ydata(),
                                  yvalue)
