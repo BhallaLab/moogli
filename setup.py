@@ -1,14 +1,6 @@
 # -*- coding: utf-8 -*-
 """setup.py: 
-
 This script is used with cmake to install moogli.
-
-This must be called as 
-
-    python cmake_modules/setup.py install
-
-NOTE: This repository is clone of `https://github.com/aviralg/moogli`.
-
 """
     
 __author__           = "Dilawar Singh"
@@ -26,7 +18,7 @@ import os
 from distutils.core import setup, Extension
 long_description = open(os.path.join('.', "README.md")).read()
 
-_version = '0.5.git'
+_version = '0.6.git'
 if os.path.exists( 'VERSION' ):
     with open( 'VERSION', 'r' ) as f:
         _version = f.read( )

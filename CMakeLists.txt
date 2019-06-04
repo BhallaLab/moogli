@@ -88,7 +88,7 @@ add_custom_target(bdist ALL DEPENDS ${MOOGLI_BDIST_FILE})
 add_custom_command( OUTPUT ${MOOGLI_BDIST_FILE}
     DEPENDS ${MOOGLI_MAIN_OUTFILE}
     COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR} && ${PYTHON_EXECUTABLE} setup.py 
-        bdist -d ${MOOGLI_BDIST_DIR} -p CMAKE
+        bdist_dumb -d ${MOOGLI_BDIST_DIR} -p CMAKE --relative
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Building bdist"
     VERBATIM
@@ -104,7 +104,8 @@ add_custom_command( TARGET bdist POST_BUILD
 add_dependencies( bdist build_moogli )
 
 # Install the unarchived bdist
-install(DIRECTORY  ${MOOGLI_BDIST_INSTALL_DIR}/usr/ 
+set(CMAKE_INSTALL_PREFIX $ENV{HOME}/.local)
+install(DIRECTORY  ${MOOGLI_BDIST_INSTALL_DIR}/
     DESTINATION ${CMAKE_INSTALL_PREFIX}
     )
 

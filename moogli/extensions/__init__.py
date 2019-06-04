@@ -1,12 +1,2 @@
-#import nsdf
-#import table
-#import swc
-#import neuroml
-import moose
-
+import moogli.extentions.moose
 __all__ = ["moose"]
-#"nsdf",
-#           "table",
-#           "swc",
-#           "neuroml",
-#           "moose"]
