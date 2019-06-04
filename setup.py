@@ -15,10 +15,11 @@ __status__           = "Development"
 
 import sys
 import os
-from distutils.core import setup, Extension
+import setuptools
+
 long_description = open(os.path.join('.', "README.md")).read()
 
-_version = '0.6.git'
+_version = '0.6.1'
 if os.path.exists( 'VERSION' ):
     with open( 'VERSION', 'r' ) as f:
         _version = f.read( )
@@ -30,42 +31,18 @@ if not os.path.exists(soFile):
     print("We are in %s" % os.getcwd())
     quit()
 
-setup(name='moogli',
-        author='Aviral Goel',
+setuptools.setup(name='moogli',
+        author='Aviral Goel, Dilawar Singh',
         author_email='aviralg@ncbs.res.in',
         maintainer='Dilawar Singh',
         maintainer_email='dilawars@ncbs.res.in',
         version=_version,
         url='https://github.com/BhallaLab/moogli',
-        download_url='https://github.com/aviralg/moogli',
+        download_url='https://github.com/BhallaLab/moogli',
         description="A 3D visualizer for neuronal networks",
         long_description=long_description,
-        classifiers=['Development Status :: 3 - Alpha',
-            'Environment :: X11 Applications :: Qt',
-            'Intended Audience :: Science/Research',
-            'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
-            'Programming Language :: Python :: 2.6',
-            'Programming Language :: Python :: 2.7',
-            'Programming Language :: C++',
-            'Natural Language :: English',
-            'Operating System :: OS Independent',
-            'Topic :: Scientific/Engineering'],
         license='GPLv2',
         include_package_data = True,
-        packages=[ 
-            "moogli",
-            "moogli.core",
-            "moogli.widgets",
-            "moogli.extensions",
-            "moogli.extensions.moose",
-            "moogli.extensions.neuroml",
-            "moogli.extensions.nsdf",
-            "moogli.extensions.swc",
-            "moogli.extensions.table",
-            "moogli.visualization",
-            "moogli.visualization.pipeline",
-            "moogli.visualization.plots"
-            ],
-        package_dir = { 'moogli.core' : 'moogli/core' },
+        packages= setuptools.find_packages(),
         package_data = { 'moogli.core' : [ '_moogli.so' ] },
         )

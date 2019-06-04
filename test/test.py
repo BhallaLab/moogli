@@ -1,4 +1,7 @@
 import moogli
+print( 'Using moogli from %s' % moogli.__file__)
+print(dir(moogli))
+import moogli.extentions
 import unittest
 
 # network1 = moogli.Network("Network-1")

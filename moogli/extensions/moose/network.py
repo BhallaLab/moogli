@@ -1,25 +1,6 @@
 import moogli
 import moose
 
-# class MooseSpineHead(moogli.core.Frustum):
-#     pass
-
-# class MooseSpineShaft(moogli.core.Frustum):
-#     pass
-
-# class MooseSoma(moogli.core.Sphere):
-#     pass
-
-# class MooseDendrite(moogli.core.Frustum):
-#     def __init__(self, moose_element):
-#         self.parent = pass
-
-# class MooseChemicalCompartment(moogli.core.Frustum):
-#     pass
-
-# class MooseNetwork()
-
-
 def read(path="", vertices=10, track_parent_radius=False):
     network = moogli.Group(path)
     neuron = moogli.Group("neuron")
